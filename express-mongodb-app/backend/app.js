@@ -47,27 +47,39 @@ app.get('/', (req, res) => {
 
 // Define a route to handle form submissions
 app.post('/submit', (req, res) => {
-  const newResponse = new Response({
-    question1: req.body.question1,
-    question2: req.body.question2,
-    question3: req.body.question3,
-    question4: req.body.question4,
-    question5: req.body.question5,
-    question6: req.body.question6,
-    question7: req.body.question7,
-    question8: req.body.question8,
-    question9: req.body.question9,
-    question10: req.body.question10,
-  });
+  const newResponse = new Response(req.body);
 
   newResponse.save((err) => {
     if (err) {
       res.status(500).send('Error saving response to the database.');
     } else {
-      res.status(200).send('Response saved successfully!');
+      const result = classifyLifestyle(req.body);
+      res.status(200).send(result);
     }
   });
 });
+
+// Function to classify lifestyle based on questionnaire answers
+function classifyLifestyle(answers) {
+  const count = { A: 0, B: 0, C: 0, D: 0 };
+
+  Object.values(answers).forEach(answerSet => {
+    answerSet.forEach(answer => {
+      count[answer]++;
+    });
+  });
+
+  const max = Math.max(count.A, count.B, count.C, count.D);
+  if (count.A === max) {
+    return 'Your lifestyle habits are classified as Poor Lifestyle Habits.';
+  } else if (count.B === max) {
+    return 'Your lifestyle habits are classified as Below Average Lifestyle Habits.';
+  } else if (count.C === max) {
+    return 'Your lifestyle habits are classified as Average Lifestyle Habits.';
+  } else {
+    return 'Your lifestyle habits are classified as Excellent Lifestyle Habits.';
+  }
+}
 
 // Start server
 app.listen(port, () => {
