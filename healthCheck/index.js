@@ -1,46 +1,47 @@
+
 document.getElementById('health-check-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting the traditional way
-  
-    const answers = [];
-  
-    // Loop through each question
-    for (let i = 1; i <= 10; i++) { // Adjust the range if you have more/less questions
+  event.preventDefault(); // Prevent the form from submitting the traditional way
+
+  const answers = [];
+
+  // Loop through each question
+  for (let i = 1; i <= 10; i++) { // Adjust the range if you have more/less questions
       const radios = document.getElementsByName('question' + i);
       for (const radio of radios) {
-        if (radio.checked) {
-          answers.push(radio.value);
-          break; // Exit loop after finding the checked radio button for this question
-        }
+          if (radio.checked) {
+              answers.push(radio.value);
+              break; // Exit loop after finding the checked radio button for this question
+          }
       }
-    }
-  
-    // Function to find the most chosen letter
-    function findMostChosenLetter(answers) {
+  }
+
+  // Function to find the most chosen letter
+  function findMostChosenLetter(answers) {
       const counts = { A: 0, B: 0, C: 0, D: 0 };
-  
+
       // Count the occurrences of each letter
       answers.forEach(answer => {
-        if (counts.hasOwnProperty(answer)) {
-          counts[answer]++;
-        }
+          if (counts.hasOwnProperty(answer)) {
+              counts[answer]++;
+          }
       });
-  
+
       // Determine the most chosen letter
       let mostChosenLetter = null;
       let maxCount = 0;
-  
+
       for (const letter in counts) {
-        if (counts[letter] > maxCount) {
-          maxCount = counts[letter];
-          mostChosenLetter = letter;
-        }
+          if (counts[letter] > maxCount) {
+              maxCount = counts[letter];
+              mostChosenLetter = letter;
+          }
       }
-  
+
       return mostChosenLetter;
-    }
-  
-    // Object to map each letter to a corresponding result message with detailed advice
-    const resultMessages = {
+  }
+
+  // Object to map each letter to a corresponding result message with detailed advice
+  const resultMessages = {
       A: "You should focus more on maintaining a balanced and healthy lifestyle. Consider the following advice:\n" +
          "1. Incorporate more fruits and vegetables into your diet.\n" +
          "2. Aim for at least 30 minutes of moderate exercise most days of the week.\n" +
@@ -65,15 +66,22 @@ document.getElementById('health-check-form').addEventListener('submit', function
          "3. Maintain your healthy sleep patterns.\n" +
          "4. Stay hydrated and keep drinking enough water.\n" +
          "5. Keep managing stress effectively through your preferred methods."
-    };
+  };
+
+  const mostChosenLetter = findMostChosenLetter(answers);
+  const resultMessage = resultMessages[mostChosenLetter];
   
-    const mostChosenLetter = findMostChosenLetter(answers);
-    const resultMessage = resultMessages[mostChosenLetter];
+  // Split the result message into sentences
+  const sentences = resultMessage.split('\n');
   
-    // Display the result message in the HTML
-    const resultDiv = document.getElementById('result');
-    resultDiv.textContent = `Result: ${resultMessage}`;
+  // Display each sentence in a new <p> element
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = ''; // Clear previous results
+  sentences.forEach(sentence => {
+      const p = document.createElement('p');
+      p.textContent = sentence;
+      resultDiv.appendChild(p);
   });
-  
-  
+});
+
   
