@@ -9,7 +9,7 @@ body {
     padding: 20px;
     border: solid #0a369d 1px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px #0a369d;
     text-align: center;
 }
 
